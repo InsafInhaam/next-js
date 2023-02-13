@@ -1,14 +1,8 @@
-const EventsCatPage = () => {
-  return (
-    <div>
-      <h1>Event1 page</h1>
-      <a href="/events/event1">Event 1</a>
-      <a href="/events/event2">Event 2</a>
-      <a href="/events/event3">Event 3</a>
-      <a href="/events/event4">Event 4</a>
-      <a href="/events/event5">Event 5</a>
-    </div>
-  );
+
+import CatEvent from "../../../src/components/events/catEvent";
+
+const EventsCatPage = ({ data, pageName }) => {
+  return <CatEvent data={data} pageName={pageName} />;
 };
 
 export default EventsCatPage;
@@ -27,9 +21,14 @@ export async function getStaticPaths() {
     paths: allPaths,
     fallback: false,
   };
-}  
+}
 
-export async function getStaticProps(context){
-    const {allEvents} = await import('../../../data/data.json')
-    return{props: {}}
+export async function getStaticProps(context) {
+  const id = context?.params.cat;
+
+  const { allEvents } = await import("/data/data.json");
+
+  const data = allEvents.filter((ev) => ev?.city === id);
+
+  return { props: { data, pageName: id } };
 }
